@@ -1,5 +1,6 @@
 #!/bin/bash
 # Usage: Hello World Bash Shell Script Using Variables
+# Author: Vivek Gite
 # -------------------------------------------------
  
 # Define bash shell variable called var 
