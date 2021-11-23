@@ -4,32 +4,35 @@ node{
    }
    stage('Compile-Package'){
       // Get maven home path
-      def mvnHome =  tool name: 'maven3', type: 'maven'   
+      def mvnHome =  tool name: 'maven', type: 'maven'   
       sh "${mvnHome}/bin/mvn package"
    }
-   stage('Slack Notification'){
-       slackSend baseUrl: 'https://hooks.slack.com/services/',
-       channel: '#cicd-b01',
-       color: 'good', 
-       message: 'Jenkins Build Success!', 
-       teamDomain: 'vedantek',
-       tokenCredentialId: 'slack'
+    stage('Deploy to Tomcat'){
+    sshagent(['tomcat-user']) {
+    sh 'scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/warpipeline/target/myweb-0.0.1.war ec2-user@172.31.27.37:/opt/apache-tomcat-8.5.35/webapps/'
    }
-   stage('Upload to S3'){
-   s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'stage-repo-cicd', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: false, noUploadOnFailure: false, selectedRegion: 'us-east-1', showDirectlyInBrowser: false, sourceFile: 'target/*.war', storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 'aws-s3', userMetadata: []
-   }
-   
-   stage('Deploy to Tomcat'){
-   sshagent(['tomcat-server']) {
-    sh 'scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/java-war-cicd/target/myweb-0.0.1.war ubuntu@3.93.144.30:/var/lib/tomcat9/webapps/'
-   }
-   }
-   stage('Slack Notification'){
-       slackSend baseUrl: 'https://hooks.slack.com/services/',
-       channel: '#cicd-b01',
-       color: 'good', 
-       message: 'Package is uploaded to S3!', 
-       teamDomain: 'vedantek',
-       tokenCredentialId: 'slack'
    }
 }
+
+<!--
+pipeline {
+     agent any
+	 tools {
+        maven 'maven'
+	}
+	stages {
+	    stage("clone code"){
+		    steps{
+			   git 'https://github.com/vedantek/java-maven-war'
+			}
+		stage("build code"){
+		  steps{
+		     sh "mvn clean install"
+			 {
+		}
+		    stage('Deploy to Tomcat'){
+            sshagent(['jenkinsprivatekey']) {
+			sh 'scp -r StrictHostKeyChecking=no /var/lib/jenkins/workspace/war pipeline/target/myweb-0.0.1.war ec2-user@172.31.27.37:/opt/apache-tomcat-8.5.35/webapps/'
+		    }
+		}
+<!--
