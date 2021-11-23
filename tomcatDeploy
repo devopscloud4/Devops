@@ -1,6 +1,6 @@
 node{
    stage('SCM Checkout'){
-     git 'https://github.com/vedantek/jenkins-labs'
+     git 'https://github.com/devopscloud4/Devops.git'
    }
    stage('Compile-Package'){
       // Get maven home path
@@ -12,7 +12,7 @@ node{
        channel: '#cicd',
        color: 'good', 
        message: 'Build Started!', 
-       teamDomain: 'vedantek',
+       teamDomain: 'sampledomain',
        tokenCredentialId: 'slack'
    }
    stage('Deploy to Tomcat'){
@@ -26,7 +26,7 @@ node{
        channel: '#cicd',
        color: 'good', 
        message: 'Build Done!', 
-       teamDomain: 'vedantek',
+       teamDomain: 'sampledomain',
        tokenCredentialId: 'slack'
    }
 
