@@ -14,8 +14,8 @@ node{
    }
 }
 
-<!--
-pipeline {
+
+/*pipeline {
      agent any
 	 tools {
         maven 'maven'
@@ -34,5 +34,4 @@ pipeline {
             sshagent(['jenkinsprivatekey']) {
 			sh 'scp -r StrictHostKeyChecking=no /var/lib/jenkins/workspace/war pipeline/target/myweb-0.0.1.war ec2-user@172.31.27.37:/opt/apache-tomcat-8.5.35/webapps/'
 		    }
-		}
-<!--
+		}*/
